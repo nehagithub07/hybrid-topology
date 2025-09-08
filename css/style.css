@@ -86,7 +86,6 @@ body{
     font-size: 20px;
     font-family: sans-serif;
 }
-
 /* --- positions updated to match your diagram --- */
 #mid {
   margin-top: 1rem;
@@ -98,18 +97,17 @@ body{
   box-shadow: 2px 4px 6px #262626;
   border-radius: 4px;
   background-image: url('../images/bg.jpg');
-  position: relative;             /* <-- important so absolute children align to this area */
+  position: relative;     /* important for absolute children */
+  overflow: hidden;       /* keeps wires inside the canvas */
 }
- 
-/* PCs */ 
-#PCH1 { position:absolute; left:540px; visibility:hidden; }   /* above HUB-1 */
-#PCH2 { position:absolute; left:880px; visibility:hidden; }   /* right of HUB-1 */
-#PCH3 { position:absolute; left:180px; visibility:hidden; }   /* left of HUB-1 */
-#PCH4 { position:absolute; left:180px; visibility:hidden; }   /* left of HUB-2 */
-#PCH5 { position:absolute; left:880px; visibility:hidden; }   /* right of HUB-2 */
 
-/* Hubs (stacked vertically) */
-#HUBH1 { position:absolute; top:210px; left:520px; visibility:hidden; }
-#HUBH2 { position:absolute; top:420px; left:520px; visibility:hidden; }
+/* PCs (re-positioned to avoid the palette & edges) */
+#PCH1 { position:absolute; top:  20px; left: 400px; visibility:hidden; } /* top center */
+#PCH2 { position:absolute; top: 100px; left: 780px; visibility:hidden; } /* right mid */
+#PCH3 { position:absolute; top: 100px; left:  70px; visibility:hidden; } /* left mid  */
+#PCH4 { position:absolute; top: 330px; left:  70px; visibility:hidden; } /* bottom-left */
+#PCH5 { position:absolute; top: 330px; left: 780px; visibility:hidden; } /* bottom-right */
 
-/* Remove everything related to laptops & switches from CSS (if any), keep the rest of your styles unchanged */
+/* Hubs aligned on the vertical center line */
+#HUBH1 { position:absolute; top: 170px; left: 400px; visibility:hidden; } /* upper hub */
+#HUBH2 { position:absolute; top: 330px; left: 400px; visibility:hidden; } /* lower hub */

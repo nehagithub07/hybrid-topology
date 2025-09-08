@@ -51,44 +51,58 @@ function imgDraw(id) {
   }
 }
 
-function endpoint(opts) {
-  return instance.addEndpoint(opts.el, {
-    endpoint: ['Dot', { radius: 7 }],
-    anchor: opts.anchor,
+function endpointPx(el, x, y, color = 'black', r = 6) {
+  return instance.addEndpoint(el, {
+    endpoint: ['Dot', { radius: r }],
+    anchor: [[0, 0, 0, 1, x, y]],   // px from top-left of the element
     isSource: true,
     isTarget: true,
     maxConnections: -1,
     connector: 'Straight',
     paintStyle: { stroke: 'black', strokeWidth: 3 },
     connectorStyle: { stroke: 'black', strokeWidth: 3 },
-    endpointStyle: { fill: opts.color || 'black' },
+    endpointStyle: { fill: color },
     connectionsDetachable: false
   });
 }
-
 function maybeCreateEndpoints() {
   if (!devicesPlaced.pcs || !devicesPlaced.hubs || endpointsCreated) return;
 
-  // PCs: one port each, oriented toward the nearest hub
-  endpoint({ el: 'PCH1', anchor: 'Bottom' });       // to HUB-1 (from above)
-  endpoint({ el: 'PCH2', anchor: 'Left' });         // to HUB-1 (from right)
-  endpoint({ el: 'PCH3', anchor: 'Right' });        // to HUB-1 (from left)
-  endpoint({ el: 'PCH4', anchor: 'Right' });        // to HUB-2 (from left)
-  endpoint({ el: 'PCH5', anchor: 'Left' });         // to HUB-2 (from right)
+  // --- PC ports (image ~100x100). Put dots on the screen bezel. ---
+  // bottom-center for PC-1 (to HUB-1)
+  endpointPx('PCH1', 50, 82, 'black', 6);
 
-  // HUB-1 ports: top/right/left/bottom
-  endpoint({ el: 'HUBH1', anchor: 'Top',    color: 'red' });
-  endpoint({ el: 'HUBH1', anchor: 'Right',  color: 'red' });
-  endpoint({ el: 'HUBH1', anchor: 'Left',   color: 'red' });
-  endpoint({ el: 'HUBH1', anchor: 'Bottom', color: 'red' });
+  // middle-left (to HUB-1)
+  endpointPx('PCH2', 8, 50, 'black', 6);
 
-  // HUB-2 ports: left/right/top
-  endpoint({ el: 'HUBH2', anchor: 'Left',   color: 'red' });
-  endpoint({ el: 'HUBH2', anchor: 'Right',  color: 'red' });
-  endpoint({ el: 'HUBH2', anchor: 'Top',    color: 'red' });
+  // middle-right (to HUB-1)
+  endpointPx('PCH3', 92, 50, 'black', 6);
+
+  // middle-right (to HUB-2)
+  endpointPx('PCH4', 92, 50, 'black', 6);
+
+  // middle-left (to HUB-2)
+  endpointPx('PCH5', 8, 50, 'black', 6);
+
+  // --- HUB ports (image ~100x75). Align with the front jack row. ---
+  // HUB-1: left jack, right jack, bottom center (for the vertical backbone)
+  
+
+// --- HUB-1: four ports ---
+// left jack, right jack, center jack (front row), bottom jack (to HUB-2)
+endpointPx('HUBH1', 26, 54, 'red', 6);   // left jack
+endpointPx('HUBH1', 84, 54, 'red', 6);   // right jack
+endpointPx('HUBH1', 63, 54, 'red', 6);   // center jack (NEW)
+  endpointPx('HUBH1', 45, 54, 'red', 6);   // bottom jack (to HUB-2)
+
+  // HUB-2: left jack, right jack, top center (from HUB-1)
+  endpointPx('HUBH2', 26, 54, 'red', 6);   // left jack
+  endpointPx('HUBH2', 84, 54, 'red', 6);   // right jack
+  endpointPx('HUBH2', 45, 54,  'red', 6);   // top jack (from HUB-1)
 
   endpointsCreated = true;
 }
+
 
 function redirect() {
   const v = document.getElementById("dropdown").value;
