@@ -125,7 +125,7 @@ function maybeCreateEndpoints() {
     endpointPx('PCH4', 92, 50, 'black', 6); // middle-right
     endpointPx('PCH5', 8,  50, 'black', 6); // middle-left
   } else { // laptop
-    endpointPx('LAPH1', 50, 82, 'black', 6);
+    endpointPx('LAPH1', 50, 104, 'black', 6);
     endpointPx('LAPH2', 8,  50, 'black', 6);
     endpointPx('LAPH3', 92, 50, 'black', 6);
     endpointPx('LAPH4', 92, 50, 'black', 6);
