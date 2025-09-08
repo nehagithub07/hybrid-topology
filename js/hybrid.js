@@ -1,6 +1,7 @@
-// Hubs-only hybrid (star–star) with jsPlumb
+// Hybrid (star–star) builder with choice: PCs or Laptops; Hubs or Switches
 let instance;
-let devicesPlaced = { pcs: false, hubs: false };
+let chosenEnd = null;   // 'pc' or 'laptop'
+let chosenCore = null;  // 'hub' or 'switch'
 let endpointsCreated = false;
 const edgesMade = new Set();
 
@@ -9,14 +10,13 @@ function initialise() {
     backdrop: false,
     target: '#mid',
     customClass: { container: 'position-absolute' },
-    title: "Hybrid Topology (Hubs only)",
-    text: "Place PCs and Hubs, connect PC-1/2/3 to HUB-1, HUB-1 ↔ HUB-2, and PC-4/5 to HUB-2. Then click CHECK.",
+    title: "Hybrid Topology",
+    html: "Choose <b>PC</b> or <b>Laptop</b> and <b>Hub</b> or <b>Switch</b>. Then connect 1/2/3 → device-1, device-1 ↔ device-2, 4/5 → device-2. Finally click <b>CHECK</b>.",
     icon: "info",
   });
 
   jsPlumb.ready(function () {
     instance = jsPlumb.getInstance({});
-    // IMPORTANT: set the correct container (bug fix)
     instance.setContainer(document.getElementById('mid'));
 
     instance.bind('connection', function (info) {
@@ -24,31 +24,78 @@ function initialise() {
       const b = info.targetId;
       const key = [a, b].sort().join('|');
       edgesMade.add(key);
-      // console.log('connected:', key);
     });
   });
 }
 
 function imgDraw(id) {
-  if (id === 'com' && !devicesPlaced.pcs) {
+  // END DEVICES
+  if (id === 'com') {
+    if (chosenEnd && chosenEnd !== 'pc') return denyEndChoice('Laptop', 'PC');
+    if (!chosenEnd) chosenEnd = 'pc';
     ['PCH1','PCH2','PCH3','PCH4','PCH5'].forEach(s => {
       document.getElementById(s).style.visibility = 'visible';
     });
-    devicesPlaced.pcs = true;
-    document.getElementById('com').onclick = null;
-    document.getElementById('com').style.opacity = 0.5;
+    disablePalette('com');
+    disablePalette('laptop'); // enforce one end-device family
+    maybeCreateEndpoints();
+  }
+  if (id === 'laptop') {
+    if (chosenEnd && chosenEnd !== 'laptop') return denyEndChoice('PC', 'Laptop');
+    if (!chosenEnd) chosenEnd = 'laptop';
+    ['LAPH1','LAPH2','LAPH3','LAPH4','LAPH5'].forEach(s => {
+      document.getElementById(s).style.visibility = 'visible';
+    });
+    disablePalette('laptop');
+    disablePalette('com'); // enforce one end-device family
     maybeCreateEndpoints();
   }
 
-  if (id === 'iswitch' && !devicesPlaced.hubs) {
+  // CORE DEVICES
+  if (id === 'iswitch') { // Hub (legacy id kept)
+    if (chosenCore && chosenCore !== 'hub') return denyCoreChoice('Switch', 'Hub');
+    if (!chosenCore) chosenCore = 'hub';
     ['HUBH1','HUBH2'].forEach(s => {
       document.getElementById(s).style.visibility = 'visible';
     });
-    devicesPlaced.hubs = true;
-    document.getElementById('iswitch').onclick = null;
-    document.getElementById('iswitch').style.opacity = 0.5;
+    disablePalette('iswitch');
+    disablePalette('switch'); // enforce one core-device family
     maybeCreateEndpoints();
   }
+  if (id === 'switch') {
+    if (chosenCore && chosenCore !== 'switch') return denyCoreChoice('Hub', 'Switch');
+    if (!chosenCore) chosenCore = 'switch';
+    ['SWH1','SWH2'].forEach(s => {
+      document.getElementById(s).style.visibility = 'visible';
+    });
+    disablePalette('switch');
+    disablePalette('iswitch'); // enforce one core-device family
+    maybeCreateEndpoints();
+  }
+}
+
+function disablePalette(elId) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.onclick = null;
+  el.style.opacity = 0.5;
+}
+
+function denyEndChoice(existing, trying) {
+  Swal.fire({
+    backdrop:false, target:'#mid', customClass:{container:'position-absolute'},
+    title: "End-device type already chosen",
+    text: `You already placed ${existing}. Reset to choose ${trying}.`,
+    icon: "warning"
+  });
+}
+function denyCoreChoice(existing, trying) {
+  Swal.fire({
+    backdrop:false, target:'#mid', customClass:{container:'position-absolute'},
+    title: "Central-device type already chosen",
+    text: `You already placed ${existing}. Reset to choose ${trying}.`,
+    icon: "warning"
+  });
 }
 
 function endpointPx(el, x, y, color = 'black', r = 6) {
@@ -65,44 +112,44 @@ function endpointPx(el, x, y, color = 'black', r = 6) {
     connectionsDetachable: false
   });
 }
+
 function maybeCreateEndpoints() {
-  if (!devicesPlaced.pcs || !devicesPlaced.hubs || endpointsCreated) return;
+  if (endpointsCreated) return;
+  if (!(chosenEnd && chosenCore)) return;
 
-  // --- PC ports (image ~100x100). Put dots on the screen bezel. ---
-  // bottom-center for PC-1 (to HUB-1)
-  endpointPx('PCH1', 50, 82, 'black', 6);
+  // ---------- End-device ports ----------
+  if (chosenEnd === 'pc') {
+    endpointPx('PCH1', 50, 82, 'black', 6); // bottom-center
+    endpointPx('PCH2', 8,  50, 'black', 6); // middle-left
+    endpointPx('PCH3', 92, 50, 'black', 6); // middle-right
+    endpointPx('PCH4', 92, 50, 'black', 6); // middle-right
+    endpointPx('PCH5', 8,  50, 'black', 6); // middle-left
+  } else { // laptop
+    endpointPx('LAPH1', 50, 82, 'black', 6);
+    endpointPx('LAPH2', 8,  50, 'black', 6);
+    endpointPx('LAPH3', 92, 50, 'black', 6);
+    endpointPx('LAPH4', 92, 50, 'black', 6);
+    endpointPx('LAPH5', 8,  50, 'black', 6);
+  }
 
-  // middle-left (to HUB-1)
-  endpointPx('PCH2', 8, 50, 'black', 6);
+  // ---------- Core-device ports (4 ports each) ----------
+  const addCorePorts = (idPrefix, color) => {
+    // left jack, right jack, center jack, vertical link jack
+    endpointPx(idPrefix + '1', 26, 54, color, 6);
+    endpointPx(idPrefix + '1', 84, 54, color, 6);
+    endpointPx(idPrefix + '1', 63, 54, color, 6);
+    endpointPx(idPrefix + '1', 45, 54, color, 6);
 
-  // middle-right (to HUB-1)
-  endpointPx('PCH3', 92, 50, 'black', 6);
+    endpointPx(idPrefix + '2', 26, 54, color, 6);
+    endpointPx(idPrefix + '2', 84, 54, color, 6);
+    endpointPx(idPrefix + '2', 45, 54, color, 6); // jack facing the link
+  };
 
-  // middle-right (to HUB-2)
-  endpointPx('PCH4', 92, 50, 'black', 6);
-
-  // middle-left (to HUB-2)
-  endpointPx('PCH5', 8, 50, 'black', 6);
-
-  // --- HUB ports (image ~100x75). Align with the front jack row. ---
-  // HUB-1: left jack, right jack, bottom center (for the vertical backbone)
-  
-
-// --- HUB-1: four ports ---
-// left jack, right jack, center jack (front row), bottom jack (to HUB-2)
-endpointPx('HUBH1', 26, 54, 'red', 6);   // left jack
-endpointPx('HUBH1', 84, 54, 'red', 6);   // right jack
-endpointPx('HUBH1', 63, 54, 'red', 6);   // center jack (NEW)
-  endpointPx('HUBH1', 45, 54, 'red', 6);   // bottom jack (to HUB-2)
-
-  // HUB-2: left jack, right jack, top center (from HUB-1)
-  endpointPx('HUBH2', 26, 54, 'red', 6);   // left jack
-  endpointPx('HUBH2', 84, 54, 'red', 6);   // right jack
-  endpointPx('HUBH2', 45, 54,  'red', 6);   // top jack (from HUB-1)
+  if (chosenCore === 'hub') addCorePorts('HUBH', 'red');
+  else addCorePorts('SWH', 'red');
 
   endpointsCreated = true;
 }
-
 
 function redirect() {
   const v = document.getElementById("dropdown").value;
@@ -116,16 +163,16 @@ function redirect() {
 function reset() { window.location.reload(); }
 
 function evaltop() {
-  if (!devicesPlaced.pcs) {
+  if (!chosenEnd) {
     return Swal.fire({
       backdrop:false, target:'#mid', customClass:{container:'position-absolute'},
-      title:"End devices missing", text:"Click on PC to place PC-1 … PC-5."
+      title:"End devices missing", text:"Click on PC or Laptop to place the 5 end devices."
     });
   }
-  if (!devicesPlaced.hubs) {
+  if (!chosenCore) {
     return Swal.fire({
       backdrop:false, target:'#mid', customClass:{container:'position-absolute'},
-      title:"Central devices missing", text:"Click on Hub to place HUB-1 and HUB-2."
+      title:"Central devices missing", text:"Click on Hub or Switch to place the two core devices."
     });
   }
   if (edgesMade.size < 6) {
@@ -136,13 +183,17 @@ function evaltop() {
     });
   }
 
+  // Build the required edge keys based on chosen families
+  const E = (i) => (chosenEnd === 'pc' ? `PCH${i}` : `LAPH${i}`);
+  const C = (i) => (chosenCore === 'hub' ? `HUBH${i}` : `SWH${i}`);
+
   const need = new Set([
-    'HUBH1|PCH1',
-    'HUBH1|PCH2',
-    'HUBH1|PCH3',
-    'HUBH1|HUBH2',
-    'HUBH2|PCH4',
-    'HUBH2|PCH5'
+    [C(1), E(1)].sort().join('|'),
+    [C(1), E(2)].sort().join('|'),
+    [C(1), E(3)].sort().join('|'),
+    [C(1), C(2)].sort().join('|'),
+    [C(2), E(4)].sort().join('|'),
+    [C(2), E(5)].sort().join('|'),
   ]);
 
   let ok = true;
@@ -152,13 +203,14 @@ function evaltop() {
     Swal.fire({
       backdrop:false, target:'#mid', customClass:{container:'position-absolute'},
       title:"Connection Established!",
-      text:"Hybrid built correctly with hubs only.",
+      text:`Hybrid built correctly with ${chosenEnd.toUpperCase()}s and ${chosenCore.toUpperCase()}s.`,
       icon:"success"
     });
   } else {
     Swal.fire({
       backdrop:false, target:'#mid', customClass:{container:'position-absolute'},
-      title:"Oops...", text:"Connections don’t match the target diagram. Reset or fix the wires.",
+      title:"Oops...",
+      text:"Connections don’t match the target diagram. Reset or fix the wires.",
       icon:"error"
     });
   }

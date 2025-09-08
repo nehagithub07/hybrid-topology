@@ -46,10 +46,13 @@
     <button type="button" class="ins" onclick="myFunction()">INSTRUCTIONS</button>
     <div id="myDropdown" class="dropdown-content">
       <p style="text-align: justify; line-height: 1.4">
-        <b>To perform the simulation (Hubs only):</b><br>
-        <b>1.</b> Click on <i>PC</i> once to place PC-1 … PC-5.<br>
-        <b>2.</b> Click on <i>Hub</i> once to place HUB-1 and HUB-2.<br>
-        <b>3.</b> Connect the devices to match the diagram (PC-1/2/3 → HUB-1, HUB-1 ↔ HUB-2, PC-4/5 → HUB-2).<br>
+        <b>To perform the simulation (choose one from each row):</b><br>
+        <b>End devices:</b> <i>PC</i> <u>or</u> <i>Laptop</i><br>
+        <b>Central devices:</b> <i>Hub</i> <u>or</u> <i>Switch</i><br><br>
+        <b>Steps:</b><br>
+        <b>1.</b> Click on <i>PC</i> or <i>Laptop</i> once to place 5 end devices (1..5).<br>
+        <b>2.</b> Click on <i>Hub</i> or <i>Switch</i> once to place the two central devices (1..2).<br>
+        <b>3.</b> Connect to match the diagram (1/2/3 → device-1, device-1 ↔ device-2, 4/5 → device-2).<br>
         <b>NOTE:</b> Click a device port and drag to another device port to connect.<br>
         <b>4.</b> Click <i>Check</i> to validate the hybrid topology.
       </p>
@@ -65,26 +68,38 @@
       <!-- PCs (hidden until the PC icon is clicked) -->
       <div id="PCH1"><img src="images/computer.png" width="100" height="100" alt="PC-1">
         <label style="position:absolute; color: blue; top: -2px; left: 33px;"><b>PC-1</b></label></div>
-
       <div id="PCH2"><img src="images/computer.png" width="100" height="100" alt="PC-2">
         <label style="position:absolute; color: blue; top: -2px; left: 33px;"><b>PC-2</b></label></div>
-
       <div id="PCH3"><img src="images/computer.png" width="100" height="100" alt="PC-3">
         <label style="position:absolute; color: blue; top: 80px; left: 33px;"><b>PC-3</b></label></div>
-
       <div id="PCH4"><img src="images/computer.png" width="100" height="100" alt="PC-4">
         <label style="position:absolute; color: blue; top: 80px; left: 33px;"><b>PC-4</b></label></div>
-
-      <!-- new: PC-5 -->
       <div id="PCH5"><img src="images/computer.png" width="100" height="100" alt="PC-5">
         <label style="position:absolute; color: blue; top: 80px; left: 33px;"><b>PC-5</b></label></div>
+
+      <!-- Laptops (hidden until the Laptop icon is clicked) -->
+      <div id="LAPH1"><img src="images/laptop.png" width="100" height="100" alt="LAPTOP-1">
+        <label style="position:absolute; color: blue; top: -2px; left: 12px;"><b>LAPTOP-1</b></label></div>
+      <div id="LAPH2"><img src="images/laptop.png" width="100" height="100" alt="LAPTOP-2">
+        <label style="position:absolute; color: blue; top: -2px; left: 12px;"><b>LAPTOP-2</b></label></div>
+      <div id="LAPH3"><img src="images/laptop.png" width="100" height="100" alt="LAPTOP-3">
+        <label style="position:absolute; color: blue; top: 80px; left: 12px;"><b>LAPTOP-3</b></label></div>
+      <div id="LAPH4"><img src="images/laptop.png" width="100" height="100" alt="LAPTOP-4">
+        <label style="position:absolute; color: blue; top: 80px; left: 12px;"><b>LAPTOP-4</b></label></div>
+      <div id="LAPH5"><img src="images/laptop.png" width="100" height="100" alt="LAPTOP-5">
+        <label style="position:absolute; color: blue; top: 80px; left: 12px;"><b>LAPTOP-5</b></label></div>
 
       <!-- Hubs (hidden until the Hub icon is clicked) -->
       <div id="HUBH1"><img src="images/iswitch.png" width="100" height="75" alt="Hub-1">
         <label style="position:absolute; color:red; top:0; left:33px;"><b>HUB-1</b></label></div>
-
       <div id="HUBH2"><img src="images/iswitch.png" width="100" height="75" alt="Hub-2">
         <label style="position:absolute; color:red; top:0; left:33px;"><b>HUB-2</b></label></div>
+
+      <!-- Switches (hidden until the Switch icon is clicked) -->
+      <div id="SWH1"><img src="images/iswitch1.png" width="100" height="75" alt="Switch-1">
+        <label style="position:absolute; color:red; top:0; left:24px;"><b>SWITCH-1</b></label></div>
+      <div id="SWH2"><img src="images/iswitch1.png" width="100" height="75" alt="Switch-2">
+        <label style="position:absolute; color:red; top:0; left:24px;"><b>SWITCH-2</b></label></div>
     </div>
 
     <!-- Modal for reference image -->
@@ -117,8 +132,17 @@
         <span class="caption">PC</span>
       </div>
       <div class="item">
+        <img id="laptop" width="100" height="100" class="image" src="images/laptop.png" onclick="imgDraw('laptop')" alt="Laptop">
+        <span class="caption">Laptop</span>
+      </div>
+      <div class="item">
+        <!-- keep id `iswitch` for backward-compat (Hub) -->
         <img id="iswitch" width="100" height="75" class="image" src="images/iswitch.png" onclick="imgDraw('iswitch')" alt="Hub">
         <span class="caption">Hub</span>
+      </div>
+      <div class="item">
+        <img id="switch" width="100" height="75" class="image" src="images/iswitch1.png" onclick="imgDraw('switch')" alt="Switch">
+        <span class="caption">Switch</span>
       </div>
       <div class="item">
         <img id="ireset" width="108" height="100" class="image" src="images/ree.png" onclick="reset()" alt="Reset">
@@ -149,7 +173,9 @@
     <script>
       tippy('#mid', { content: "Working Area", placement: 'left-start' });
       tippy('#com', { content: "PC", followCursor: true });
+      tippy('#laptop', { content: "LAPTOP", followCursor: true });
       tippy('#iswitch', { content: "HUB", followCursor: true });
+      tippy('#switch', { content: "SWITCH", followCursor: true });
       tippy('#ireset', { content: "RESET", followCursor: true });
       tippy('#ievaluate', { content: "CHECK", placement: 'right-end', followCursor: true });
     </script>

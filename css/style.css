@@ -1,91 +1,92 @@
 body{
-    z-index:-3;
-    position:absolute;
-    width:100%;
-    height:100%;
-  }
-  
- .image:hover {opacity: 0.7;} 
-
-  div { text-align: center; }
-  div.item {
-      display: inline-block;
-      text-align: center;
-      width: 100px;
-  }
-  .caption { display: block; }
-  
-  .box{	  
-          width: 1380px;
-          height: 800px;
-          z-index:-2;
-          border: 3px solid black;
-          background-color: #e3f6f5;    
-      }
-  
-      .disable { opacity: 0.5; }  
-  
-      .ins{
-    position: absolute;
-    top:11%;
-    right:95px;
-    background-color:#ffd803;
-    color:#272343;
-    border-radius: 6px;
-    font-size: 18px;
-    font-family: Raleway, sans-serif;
-    font-weight: bold;
-  }
-  .ins:hover {
-   background-color: #bae8e8;
-   color: #000;
-   align-content: center;
-  }
-  .ins:hover a{ color: #000; }
-  
-  .dropdown-content {
-            display:none;
-            position: absolute;
-            margin-left:75%;
-            margin-top: 1%;
-            background-color: white;
-            width: 320px;
-            height: auto;
-            border:4px;
-            border-radius: 4px;
-            padding: 10px;
-            font-family: sans-serif;
-            font-size: 15px;
-            box-shadow: 0px 8px 10px 0px rgba(0,0,1,1);
-            z-index: 1;
-            overflow: auto;
-          }
-          .dropdown-content p:hover {background-color: #e3f6f5}
-          .show {display:block;}
-          
-          .block{ display: none; }
-  
-  .footer{
-    position:absolute;
-    top:797px;
-    left: -4px;
-    width: 1381px;
-    background-color: black;
-    color: white;
-    text-align: center; 
-     font-size: 18px;
-     font-family: 'Raleway', sans-serif;
-  }
-  
-.components{   
-    border-radius: 5px;
-    margin-left:50px;
-    margin-top:10px;
-    width:1000px;
-    height:auto;
-    font-size: 20px;
-    font-family: sans-serif;
+  z-index:-3;
+  position:absolute;
+  width:100%;
+  height:100%;
 }
+
+.image:hover {opacity: 0.7;} 
+
+div { text-align: center; }
+div.item {
+  display: inline-block;
+  text-align: center;
+  width: 110px;
+}
+.caption { display: block; }
+
+.box{	  
+  width: 1380px;
+  height: 800px;
+  z-index:-2;
+  border: 3px solid black;
+  background-color: #e3f6f5;    
+}
+
+.disable { opacity: 0.5; }  
+
+.ins{
+  position: absolute;
+  top:11%;
+  right:95px;
+  background-color:#ffd803;
+  color:#272343;
+  border-radius: 6px;
+  font-size: 18px;
+  font-family: Raleway, sans-serif;
+  font-weight: bold;
+}
+.ins:hover {
+  background-color: #bae8e8;
+  color: #000;
+  align-content: center;
+}
+.ins:hover a{ color: #000; }
+
+.dropdown-content {
+  display:none;
+  position: absolute;
+  margin-left:75%;
+  margin-top: 1%;
+  background-color: white;
+  width: 340px;
+  height: auto;
+  border:4px;
+  border-radius: 4px;
+  padding: 10px;
+  font-family: sans-serif;
+  font-size: 15px;
+  box-shadow: 0px 8px 10px 0px rgba(0,0,1,1);
+  z-index: 1;
+  overflow: auto;
+}
+.dropdown-content p:hover {background-color: #e3f6f5}
+.show {display:block;}
+
+.block{ display: none; }
+
+.footer{
+  position:absolute;
+  top:797px;
+  left: -4px;
+  width: 1381px;
+  background-color: black;
+  color: white;
+  text-align: center; 
+  font-size: 18px;
+  font-family: 'Raleway', sans-serif;
+}
+
+.components{   
+  border-radius: 5px;
+  margin-left:50px;
+  margin-top:10px;
+  width:1200px;
+  height:auto;
+  font-size: 20px;
+  font-family: sans-serif;
+}
+
 /* --- positions updated to match your diagram --- */
 #mid {
   margin-top: 1rem;
@@ -108,6 +109,17 @@ body{
 #PCH4 { position:absolute; top: 330px; left:  70px; visibility:hidden; } /* bottom-left */
 #PCH5 { position:absolute; top: 330px; left: 780px; visibility:hidden; } /* bottom-right */
 
+/* Laptops replicate PC positions; only one set shows at a time */
+#LAPH1 { position:absolute; top:  20px; left: 400px; visibility:hidden; }
+#LAPH2 { position:absolute; top: 100px; left: 780px; visibility:hidden; }
+#LAPH3 { position:absolute; top: 100px; left:  70px; visibility:hidden; }
+#LAPH4 { position:absolute; top: 330px; left:  70px; visibility:hidden; }
+#LAPH5 { position:absolute; top: 330px; left: 780px; visibility:hidden; }
+
 /* Hubs aligned on the vertical center line */
 #HUBH1 { position:absolute; top: 170px; left: 400px; visibility:hidden; } /* upper hub */
 #HUBH2 { position:absolute; top: 330px; left: 400px; visibility:hidden; } /* lower hub */
+
+/* Switches share the same positions; only one set shows at a time */
+#SWH1 { position:absolute; top: 170px; left: 400px; visibility:hidden; }  /* upper switch */
+#SWH2 { position:absolute; top: 330px; left: 400px; visibility:hidden; }  /* lower switch */
