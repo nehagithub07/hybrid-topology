@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Network Topology: Hybrid</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Raleway&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.min.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/vlabs-style.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.6/js/jsplumb.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body onload="initialise()">
+  <div class="box" style="position: absolute;">
+    <section class="content">
+      <br>
+      <section class="content-header">
+        <div id="con">
+          <h3 id="con-head" align="center" style="color: #272343; font-family: 'Raleway', sans-serif;">
+            Network Topology: Hybrid
+          </h3>
+        </div>
+      </section>
+      <br>
+    </section>
+
+    <div>
+      <label for="dropdown"><b>Choose the Network you would like to implement:</b></label>
+      <select id="dropdown" onchange="redirect();">
+        <option value="star">Star Topology</option>
+        <option value="bus">Bus Topology</option>
+        <option value="ring">Ring Topology</option>
+        <option value="mesh">Mesh Topology</option>
+        <option value="hybrid" selected>Hybrid Topology</option>
+      </select>
+    </div>
+
+    <button type="button" class="ins" onclick="myFunction()">INSTRUCTIONS</button>
+    <div id="myDropdown" class="dropdown-content">
+      <p style="text-align: justify; line-height: 1.4">
+        <b>To perform the simulation (Hubs only):</b><br>
+        <b>1.</b> Click on <i>PC</i> once to place PC-1 … PC-5.<br>
+        <b>2.</b> Click on <i>Hub</i> once to place HUB-1 and HUB-2.<br>
+        <b>3.</b> Connect the devices to match the diagram (PC-1/2/3 → HUB-1, HUB-1 ↔ HUB-2, PC-4/5 → HUB-2).<br>
+        <b>NOTE:</b> Click a device port and drag to another device port to connect.<br>
+        <b>4.</b> Click <i>Check</i> to validate the hybrid topology.
+      </p>
+      <center>
+        <img id="starImg" style="width: 160px; height: 60px" title="click on image"
+             alt="Reference image for the target hybrid topology."
+             src="images/hybrid.png"><br>
+        <b>Fig. 1 Hybrid topology (click on the image)</b>
+      </center>
+    </div>
+
+    <div id="mid">
+      <!-- PCs (hidden until the PC icon is clicked) -->
+      <div id="PCH1"><img src="images/computer.png" width="100" height="100" alt="PC-1">
+        <label style="position:absolute; color: blue; top: -2px; left: 33px;"><b>PC-1</b></label></div>
+
+      <div id="PCH2"><img src="images/computer.png" width="100" height="100" alt="PC-2">
+        <label style="position:absolute; color: blue; top: -2px; left: 33px;"><b>PC-2</b></label></div>
+
+      <div id="PCH3"><img src="images/computer.png" width="100" height="100" alt="PC-3">
+        <label style="position:absolute; color: blue; top: 80px; left: 33px;"><b>PC-3</b></label></div>
+
+      <div id="PCH4"><img src="images/computer.png" width="100" height="100" alt="PC-4">
+        <label style="position:absolute; color: blue; top: 80px; left: 33px;"><b>PC-4</b></label></div>
+
+      <!-- new: PC-5 -->
+      <div id="PCH5"><img src="images/computer.png" width="100" height="100" alt="PC-5">
+        <label style="position:absolute; color: blue; top: 80px; left: 33px;"><b>PC-5</b></label></div>
+
+      <!-- Hubs (hidden until the Hub icon is clicked) -->
+      <div id="HUBH1"><img src="images/iswitch.png" width="100" height="75" alt="Hub-1">
+        <label style="position:absolute; color:red; top:0; left:33px;"><b>HUB-1</b></label></div>
+
+      <div id="HUBH2"><img src="images/iswitch.png" width="100" height="75" alt="Hub-2">
+        <label style="position:absolute; color:red; top:0; left:33px;"><b>HUB-2</b></label></div>
+    </div>
+
+    <!-- Modal for reference image -->
+    <div id="myModal" class="modal">
+      <span class="close">&times;</span>
+      <img class="modal-content" id="img01" alt="Modal Image">
+      <div id="caption"></div>
+    </div>
+
+    <script>
+      // Modal
+      const modal = document.getElementById("myModal");
+      const img = document.getElementById("starImg");
+      const modalImg = document.getElementById("img01");
+      const captionText = document.getElementById("caption");
+      img.onclick = function () {
+        modal.style.display = "block";
+        modalImg.src = this.src;
+        captionText.innerHTML = this.alt;
+      };
+      document.getElementsByClassName("close")[0].onclick = function () {
+        modal.style.display = "none";
+      };
+    </script>
+
+    <!-- Palette -->
+    <fieldset class="components" id="Components">
+      <div class="item">
+        <img id="com" width="100" height="100" class="image" src="images/computer.png" onclick="imgDraw('com')" alt="PC">
+        <span class="caption">PC</span>
+      </div>
+      <div class="item">
+        <img id="iswitch" width="100" height="75" class="image" src="images/iswitch.png" onclick="imgDraw('iswitch')" alt="Hub">
+        <span class="caption">Hub</span>
+      </div>
+      <div class="item">
+        <img id="ireset" width="108" height="100" class="image" src="images/ree.png" onclick="reset()" alt="Reset">
+        <span class="caption">Reset</span>
+      </div>
+      <div class="item">
+        <img id="ievaluate" width="100" height="100" class="image" src="images/ev.png" onclick="evaltop()" alt="Check">
+        <span class="caption">Check</span>
+      </div>
+    </fieldset>
+
+    <div class="footer">
+      &copy; 2024 Virtual Labs, IIT Roorkee
+    </div>
+
+    <script src="js/hybrid.js"></script>
+
+    <script>
+      function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+      }
+      function newPopup(url) { window.open(url, 'popUpWindow', 'height=500,width=400,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes'); }
+      function newPopup1(url) { window.open(url, 'popUpWindow1','height=750,width=1300,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes'); }
+    </script>
+
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script>
+      tippy('#mid', { content: "Working Area", placement: 'left-start' });
+      tippy('#com', { content: "PC", followCursor: true });
+      tippy('#iswitch', { content: "HUB", followCursor: true });
+      tippy('#ireset', { content: "RESET", followCursor: true });
+      tippy('#ievaluate', { content: "CHECK", placement: 'right-end', followCursor: true });
+    </script>
+  </div>
+</body>
+</html>
