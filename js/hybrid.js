@@ -1,7 +1,7 @@
-// Hybrid (star–star) builder with choice: PCs or Laptops; Hubs or Switches
+
 let instance;
-let chosenEnd = null;   // 'pc' or 'laptop'
-let chosenCore = null;  // 'hub' or 'switch'
+let chosenEnd = null;    
+let chosenCore = null;   
 let endpointsCreated = false;
 const edgesMade = new Set();
 
@@ -11,7 +11,7 @@ function initialise() {
     target: '#mid',
     customClass: { container: 'position-absolute' },
     title: "Hybrid Topology",
-    html: "Choose <b>PC</b> or <b>Laptop</b> and <b>Hub</b> or <b>Switch</b>. Then connect 1/2/3 → device-1, device-1 ↔ device-2, 4/5 → device-2. Finally click <b>CHECK</b>.",
+    html: "<p>It is a combination of two or more different topologies. Here, we create a hybrid topology combining star and bus topologies.</p>",
     icon: "info",
   });
 
@@ -29,7 +29,7 @@ function initialise() {
 }
 
 function imgDraw(id) {
-  // END DEVICES
+ 
   if (id === 'com') {
     if (chosenEnd && chosenEnd !== 'pc') return denyEndChoice('Laptop', 'PC');
     if (!chosenEnd) chosenEnd = 'pc';
@@ -37,7 +37,7 @@ function imgDraw(id) {
       document.getElementById(s).style.visibility = 'visible';
     });
     disablePalette('com');
-    disablePalette('laptop'); // enforce one end-device family
+    disablePalette('laptop');  
     maybeCreateEndpoints();
   }
   if (id === 'laptop') {
@@ -47,19 +47,18 @@ function imgDraw(id) {
       document.getElementById(s).style.visibility = 'visible';
     });
     disablePalette('laptop');
-    disablePalette('com'); // enforce one end-device family
+    disablePalette('com');  
     maybeCreateEndpoints();
   }
-
-  // CORE DEVICES
-  if (id === 'iswitch') { // Hub (legacy id kept)
+ 
+  if (id === 'iswitch') {  
     if (chosenCore && chosenCore !== 'hub') return denyCoreChoice('Switch', 'Hub');
     if (!chosenCore) chosenCore = 'hub';
     ['HUBH1','HUBH2'].forEach(s => {
       document.getElementById(s).style.visibility = 'visible';
     });
     disablePalette('iswitch');
-    disablePalette('switch'); // enforce one core-device family
+    disablePalette('switch'); 
     maybeCreateEndpoints();
   }
   if (id === 'switch') {
@@ -69,7 +68,7 @@ function imgDraw(id) {
       document.getElementById(s).style.visibility = 'visible';
     });
     disablePalette('switch');
-    disablePalette('iswitch'); // enforce one core-device family
+    disablePalette('iswitch'); 
     maybeCreateEndpoints();
   }
 }
@@ -101,7 +100,7 @@ function denyCoreChoice(existing, trying) {
 function endpointPx(el, x, y, color = 'black', r = 6) {
   return instance.addEndpoint(el, {
     endpoint: ['Dot', { radius: r }],
-    anchor: [[0, 0, 0, 1, x, y]],   // px from top-left of the element
+    anchor: [[0, 0, 0, 1, x, y]],   
     isSource: true,
     isTarget: true,
     maxConnections: -1,
@@ -116,14 +115,12 @@ function endpointPx(el, x, y, color = 'black', r = 6) {
 function maybeCreateEndpoints() {
   if (endpointsCreated) return;
   if (!(chosenEnd && chosenCore)) return;
-
-  // ---------- End-device ports ----------
   if (chosenEnd === 'pc') {
-    endpointPx('PCH1', 50, 82, 'black', 6); // bottom-center
-    endpointPx('PCH2', 8,  50, 'black', 6); // middle-left
-    endpointPx('PCH3', 92, 50, 'black', 6); // middle-right
-    endpointPx('PCH4', 92, 50, 'black', 6); // middle-right
-    endpointPx('PCH5', 8,  50, 'black', 6); // middle-left
+    endpointPx('PCH1', 50, 82, 'black', 6);  
+    endpointPx('PCH2', 8,  50, 'black', 6);  
+    endpointPx('PCH3', 92, 50, 'black', 6);  
+    endpointPx('PCH4', 92, 50, 'black', 6);  
+    endpointPx('PCH5', 8,  50, 'black', 6); 
   } else { // laptop
     endpointPx('LAPH1', 50, 104, 'black', 6);
     endpointPx('LAPH2', 8,  50, 'black', 6);
@@ -132,9 +129,9 @@ function maybeCreateEndpoints() {
     endpointPx('LAPH5', 8,  50, 'black', 6);
   }
 
-  // ---------- Core-device ports (4 ports each) ----------
+  
   const addCorePorts = (idPrefix, color) => {
-    // left jack, right jack, center jack, vertical link jack
+ 
     endpointPx(idPrefix + '1', 26, 54, color, 6);
     endpointPx(idPrefix + '1', 84, 54, color, 6);
     endpointPx(idPrefix + '1', 63, 54, color, 6);
@@ -142,7 +139,7 @@ function maybeCreateEndpoints() {
 
     endpointPx(idPrefix + '2', 26, 54, color, 6);
     endpointPx(idPrefix + '2', 84, 54, color, 6);
-    endpointPx(idPrefix + '2', 45, 54, color, 6); // jack facing the link
+    endpointPx(idPrefix + '2', 45, 54, color, 6);  
   };
 
   if (chosenCore === 'hub') addCorePorts('HUBH', 'red');
@@ -182,8 +179,7 @@ function evaltop() {
       icon:"info"
     });
   }
-
-  // Build the required edge keys based on chosen families
+ 
   const E = (i) => (chosenEnd === 'pc' ? `PCH${i}` : `LAPH${i}`);
   const C = (i) => (chosenCore === 'hub' ? `HUBH${i}` : `SWH${i}`);
 

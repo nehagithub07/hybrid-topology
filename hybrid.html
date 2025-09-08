@@ -44,28 +44,47 @@
     </div>
 
     <button type="button" class="ins" onclick="myFunction()">INSTRUCTIONS</button>
-    <div id="myDropdown" class="dropdown-content">
-      <p style="text-align: justify; line-height: 1.4">
-        <b>To perform the simulation (choose one from each row):</b><br>
-        <b>End devices:</b> <i>PC</i> <u>or</u> <i>Laptop</i><br>
-        <b>Central devices:</b> <i>Hub</i> <u>or</u> <i>Switch</i><br><br>
-        <b>Steps:</b><br>
-        <b>1.</b> Click on <i>PC</i> or <i>Laptop</i> once to place 5 end devices (1..5).<br>
-        <b>2.</b> Click on <i>Hub</i> or <i>Switch</i> once to place the two central devices (1..2).<br>
-        <b>3.</b> Connect to match the diagram (1/2/3 → device-1, device-1 ↔ device-2, 4/5 → device-2).<br>
-        <b>NOTE:</b> Click a device port and drag to another device port to connect.<br>
-        <b>4.</b> Click <i>Check</i> to validate the hybrid topology.
-      </p>
-      <center>
-        <img id="starImg" style="width: 160px; height: 60px" title="click on image"
-             alt="Reference image for the target hybrid topology."
-             src="images/image.png"><br>
-        <b>Fig. 1 Hybrid topology (click on the image)</b>
-      </center>
+   <div id="myDropdown" class="dropdown-content">
+  <div style="text-align: left; line-height: 1.5;">
+  
+    <div style="display:flex; gap:12px; align-items:flex-start;">
+      <figure style="margin:0;">
+        <img src="images/StarTopolpgy.png" alt="Star topology reference" style="max-width:160px; height:auto;">
+        <figcaption style="text-align:center; font-size:12px;">Fig. A: Star topology</figcaption>
+      </figure>
+      <figure style="margin:0;">
+        <img src="images/busTopology.png" alt="Bus topology reference" style="max-width:160px; height:auto;">
+        <figcaption style="text-align:center; font-size:12px;">Fig. B: Bus topology</figcaption>
+      </figure>
     </div>
 
+    <p style="margin-top:8px;">
+      We are building a <strong>hybrid</strong> of these two topologies: <strong>STAR + BUS</strong>.
+    </p>
+
+    <strong>Steps:</strong>
+    <ol style="margin:6px 0 0 18px; padding:0;">
+      <li><strong>To perform the simulation (choose one from each category):</strong><br>
+       <strong>End devices:</strong> <em>PC</em> <u>or</u> <em>Laptop</em><br>
+      <strong>Central devices:</strong> <em>Hub</em> <u>or</u> <em>Switch</em><br><br>
+  </li>  
+      <li>Wire to match the diagram: (1,2,3) → <em>device-1</em>, <em>device-1</em> ↔ <em>device-2</em>, (4,5) → <em>device-2</em>.</li>
+       <strong>Note:</strong> Click a device port and drag to another device port to connect
+      <li>Click <em>Check</em> to validate the hybrid topology.</li>
+    </ol>
+  </div>
+
+  <center style="margin-top:10px;">
+    <img id="starImg" style="width:160px; height:60px;" title="click on image"
+ 
+         src="images/image.png"><br>
+    <b>Fig. 1: Hybrid topology (click the image)</b>
+  </center>
+</div>
+
+
     <div id="mid">
-      <!-- PCs (hidden until the PC icon is clicked) -->
+     
       <div id="PCH1"><img src="images/computer.png" width="100" height="100" alt="PC-1">
         <label style="position:absolute; color: blue; top: -2px; left: 33px;"><b>PC-1</b></label></div>
       <div id="PCH2"><img src="images/computer.png" width="100" height="100" alt="PC-2">
@@ -77,7 +96,7 @@
       <div id="PCH5"><img src="images/computer.png" width="100" height="100" alt="PC-5">
         <label style="position:absolute; color: blue; top: 80px; left: 33px;"><b>PC-5</b></label></div>
 
-      <!-- Laptops (hidden until the Laptop icon is clicked) -->
+      
       <div id="LAPH1"><img src="images/laptop.png" width="100" height="100" alt="LAPTOP-1">
         <label style="position:absolute; color: blue; top: -20px; left: 12px;"><b>LAPTOP-1</b></label></div>
       <div id="LAPH2"><img src="images/laptop.png" width="100" height="100" alt="LAPTOP-2">
@@ -89,43 +108,50 @@
       <div id="LAPH5"><img src="images/laptop.png" width="100" height="100" alt="LAPTOP-5">
         <label style="position:absolute; color: blue; top: 100px; left: 12px;"><b>LAPTOP-5</b></label></div>
 
-      <!-- Hubs (hidden until the Hub icon is clicked) -->
+    
       <div id="HUBH1"><img src="images/iswitch.png" width="100" height="75" alt="Hub-1">
         <label style="position:absolute; color:red; top:0; left:33px;"><b>HUB-1</b></label></div>
       <div id="HUBH2"><img src="images/iswitch.png" width="100" height="75" alt="Hub-2">
         <label style="position:absolute; color:red; top:0; left:33px;"><b>HUB-2</b></label></div>
 
-      <!-- Switches (hidden until the Switch icon is clicked) -->
+      
       <div class="sw" id="SWH1"><img src="images/iswitch1.png" width="100" height="75" alt="Switch-1">
         <label style="position:absolute; color:red; top:-2px; left:24px;"> SWITCH-1 </label></div>
       <div class="sw" id="SWH2"><img src="images/iswitch1.png" width="100" height="75" alt="Switch-2">
         <label style="position:absolute; color:red; top:-2px; left:24px;"> SWITCH-2 </label></div>
     </div>
 
-    <!-- Modal for reference image -->
+ 
     <div id="myModal" class="modal">
       <span class="close">&times;</span>
       <img class="modal-content" id="img01" alt="Modal Image">
       <div id="caption"></div>
     </div>
 
-    <script>
-      // Modal
-      const modal = document.getElementById("myModal");
-      const img = document.getElementById("starImg");
-      const modalImg = document.getElementById("img01");
-      const captionText = document.getElementById("caption");
-      img.onclick = function () {
-        modal.style.display = "block";
-        modalImg.src = this.src;
-        captionText.innerHTML = this.alt;
-      };
-      document.getElementsByClassName("close")[0].onclick = function () {
-        modal.style.display = "none";
-      };
-    </script>
+<script>
+  const modal = document.getElementById("myModal");
+  const img = document.getElementById("starImg");
+  const modalImg = document.getElementById("img01");
+  const captionText = document.getElementById("caption");
 
-    <!-- Palette -->
+  img.onclick = function () {
+    modal.style.display = "block";
+    modalImg.src = this.src;
+    captionText.innerHTML = this.alt;
+
+    // make the MODAL image small
+    modalImg.style.width = "540px";   // adjust as you like (e.g., 200px)
+    modalImg.style.maxWidth = "100vw"; // stay within viewport on phones
+    modalImg.style.height = "400px";
+  };
+
+  document.getElementsByClassName("close")[0].onclick = function () {
+    modal.style.display = "none";
+  };
+</script>
+
+
+    
     <fieldset class="components" id="Components">
       <div class="item">
         <img id="com" width="100" height="100" class="image" src="images/computer.png" onclick="imgDraw('com')" alt="PC">
@@ -136,7 +162,7 @@
         <span class="caption">Laptop</span>
       </div>
       <div class="item">
-        <!-- keep id `iswitch` for backward-compat (Hub) -->
+        
         <img id="iswitch" width="100" height="75" class="image" src="images/iswitch.png" onclick="imgDraw('iswitch')" alt="Hub">
         <span class="caption">Hub</span>
       </div>
